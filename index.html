@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Report — Subdomain Takeover on comp-calculator.people.openai.org</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #0b0c10;
+      color: #c5c6c7;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    header {
+      background-color: #1f2833;
+      color: #66fcf1;
+      padding: 30px;
+      text-align: center;
+    }
+    section {
+      max-width: 900px;
+      margin: 20px auto;
+      background: #1f2833;
+      border-radius: 8px;
+      padding: 20px 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    h2 {
+      color: #45a29e;
+      border-bottom: 1px solid #45a29e;
+      padding-bottom: 5px;
+    }
+    code {
+      background-color: #0b0c10;
+      color: #66fcf1;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    pre {
+      background-color: #0b0c10;
+      color: #45a29e;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9em;
+      color: #c5c6c7;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Subdomain Takeover — OpenAI</h1>
+    <p><strong>Reporter:</strong> Bhavish Choudhary (Anon-hackerxD)</p>
+    <p><strong>Report ID:</strong> f3406a8c-dfed-4add-9a64-8de7ee26fd8e</p>
+  </header>
+
+  <section>
+    <h2>Report Overview</h2>
+    <p><strong>Title:</strong> Subdomain Takeover on <code>comp-calculator.people.openai.org</code> via Azure Static Web Apps</p>
+    <p><strong>Submitted to:</strong> OpenAI via Bugcrowd</p>
+    <p><strong>Status:</strong> New (Expedited triage)</p>
+    <p><strong>Submitted:</strong> 02 Nov 2025 23:53:13 UTC</p>
+    <p><strong>Priority:</strong> P3 — Suggested (VRT: Misconfigured DNS → Subdomain Takeover)</p>
+  </section>
+
+  <section>
+    <h2>Description</h2>
+    <p>
+      The subdomains <code>comp-calculator.people.openai.org</code> and
+      <code>comp-calculator-admin.people.openai.org</code> are configured as CNAMEs pointing to an
+      Azure Static Web Apps endpoint which currently returns the provider default 404 page.
+      The DNS and HTTP responses confirm that the target application is not provisioned,
+      making these subdomains susceptible to takeover if the corresponding Azure resource
+      is re-created by an attacker.
+    </p>
+  </section>
+
+  <section>
+    <h2>Evidence</h2>
+    <pre>
+$ dig +short CNAME comp-calculator-admin.people.openai.org
+comp-calc-admin-deezaqaafyg5b4h4.northcentralus-01.azurewebsites.net.
+
+$ dig CNAME purple-flower-04197221e.5.azurestaticapps.net +short
+azurestaticapps5.trafficmanager.net.
+
+$ curl -I https://purple-flower-04197221e.5.azurestaticapps.net
+HTTP/2 404
+content-type: text/html
+    </pre>
+  </section>
+
+  <section>
+    <h2>Steps to Reproduce (Non-Invasive)</h2>
+    <ol>
+      <li>Check the CNAME for the host:
+        <pre>dig +short CNAME comp-calculator-admin.people.openai.org</pre>
+      </li>
+      <li>Query authoritative nameserver for confirmation:
+        <pre>dig @ns1-09.azure-dns.com comp-calculator-admin.people.openai.org CNAME +noall +answer +authority</pre>
+      </li>
+      <li>Request the host to observe Azure 404 default page:
+        <pre>curl -I https://purple-flower-04197221e.5.azurestaticapps.net</pre>
+      </li>
+      <li>Verify no content hosted or claimed under the domain.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Targets</h2>
+    <ul>
+      <li><code>comp-calculator.people.openai.org</code></li>
+      <li><code>comp-calculator-admin.people.openai.org</code></li>
+    </ul>
+    <p><strong>Observed provider target:</strong> comp-calc-admin-deezaqaafyg5b4h4.northcentralus-01.azurewebsites.net</p>
+    <p><strong>Candidate Azure endpoint:</strong> purple-flower-04197221e.5.azurestaticapps.net</p>
+  </section>
+
+  <section>
+    <h2>Disclosure Policy</h2>
+    <p>
+      This engagement does not allow disclosure.
+      No third-party resources were claimed or modified during testing.
+      This report contains only non-destructive DNS and HTTP proof.
+    </p>
+  </section>
+
+  <footer>
+    <p>© 2025 Bhavish Choudhary (Anon-hackerxD) — Ethical Vulnerability Disclosure</p>
+  </footer>
+</body>
+</html>
