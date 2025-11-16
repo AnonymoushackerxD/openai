@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bug Report — Subdomain Takeover on comp-calculator.people.openai.org</title>
+  <title>Subdomain Takeover Demonstration - promos.hoteltonight-test.com</title>
   <style>
     body {
       font-family: "Segoe UI", Arial, sans-serif;
@@ -56,84 +56,70 @@
 </head>
 <body>
   <header>
-    <h1>Subdomain Takeover — OpenAI</h1>
-    <p><strong>Reporter:</strong> Bhavish Choudhary (Anon-hackerxD)</p>
-    <p><strong>Report ID:</strong> f3406a8c-dfed-4add-9a64-8de7ee26fd8e</p>
+    <h1>Subdomain Takeover Demonstration</h1>
+    <p><strong>Researcher:</strong> Bhavish Choudhary (AnonymoushackerxD)</p>
+    <p><strong>Domain:</strong> promos.hoteltonight-test.com</p>
   </header>
 
   <section>
-    <h2>Report Overview</h2>
-    <p><strong>Title:</strong> Subdomain Takeover on <code>comp-calculator.people.openai.org</code> via Azure Static Web Apps</p>
-    <p><strong>Submitted to:</strong> OpenAI via Bugcrowd</p>
-    <p><strong>Status:</strong> New (Expedited triage)</p>
-    <p><strong>Submitted:</strong> 02 Nov 2025 23:53:13 UTC</p>
-    <p><strong>Priority:</strong> P3 — Suggested (VRT: Misconfigured DNS → Subdomain Takeover)</p>
+    <h2>Security Demonstration</h2>
+    <p><strong>Vulnerability:</strong> Subdomain Takeover via Fastly Misconfiguration</p>
+    <p><strong>Status:</strong> Security Demonstration Only</p>
+    <p><strong>Date:</strong> November 2025</p>
   </section>
 
   <section>
     <h2>Description</h2>
     <p>
-      The subdomains <code>comp-calculator.people.openai.org</code> and
-      <code>comp-calculator-admin.people.openai.org</code> are configured as CNAMEs pointing to an
-      Azure Static Web Apps endpoint which currently returns the provider default 404 page.
-      The DNS and HTTP responses confirm that the target application is not provisioned,
-      making these subdomains susceptible to takeover if the corresponding Azure resource
-      is re-created by an attacker.
+      This subdomain <code>promos.hoteltonight-test.com</code> was vulnerable to takeover
+      due to DNS pointing to Fastly without proper service configuration.
+      This demonstration shows the security impact of such misconfigurations.
     </p>
   </section>
 
   <section>
-    <h2>Evidence</h2>
+    <h2>Technical Details</h2>
     <pre>
-$ dig +short CNAME comp-calculator-admin.people.openai.org
-comp-calc-admin-deezaqaafyg5b4h4.northcentralus-01.azurewebsites.net.
+$ dig +short CNAME promos.hoteltonight-test.com
+u2.shared.global.fastly.net.
 
-$ dig CNAME purple-flower-04197221e.5.azurestaticapps.net +short
-azurestaticapps5.trafficmanager.net.
-
-$ curl -I https://purple-flower-04197221e.5.azurestaticapps.net
-HTTP/2 404
+$ curl -I https://promos.hoteltonight-test.com
+HTTP/2 503
 content-type: text/html
+x-fastly-error: unknown domain
     </pre>
   </section>
 
   <section>
-    <h2>Steps to Reproduce (Non-Invasive)</h2>
+    <h2>Impact</h2>
+    <ul>
+      <li>Brand reputation damage</li>
+      <li>Phishing attacks possibility</li>
+      <li>Malicious content hosting</li>
+      <li>Cookie stealing potential</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Remediation</h2>
     <ol>
-      <li>Check the CNAME for the host:
-        <pre>dig +short CNAME comp-calculator-admin.people.openai.org</pre>
-      </li>
-      <li>Query authoritative nameserver for confirmation:
-        <pre>dig @ns1-09.azure-dns.com comp-calculator-admin.people.openai.org CNAME +noall +answer +authority</pre>
-      </li>
-      <li>Request the host to observe Azure 404 default page:
-        <pre>curl -I https://purple-flower-04197221e.5.azurestaticapps.net</pre>
-      </li>
-      <li>Verify no content hosted or claimed under the domain.</li>
+      <li>Configure the domain in Fastly service</li>
+      <li>Remove unused CNAME records</li>
+      <li>Monitor subdomains regularly</li>
+      <li>Use proper domain validation</li>
     </ol>
   </section>
 
   <section>
-    <h2>Targets</h2>
-    <ul>
-      <li><code>comp-calculator.people.openai.org</code></li>
-      <li><code>comp-calculator-admin.people.openai.org</code></li>
-    </ul>
-    <p><strong>Observed provider target:</strong> comp-calc-admin-deezaqaafyg5b4h4.northcentralus-01.azurewebsites.net</p>
-    <p><strong>Candidate Azure endpoint:</strong> purple-flower-04197221e.5.azurestaticapps.net</p>
-  </section>
-
-  <section>
-    <h2>Disclosure Policy</h2>
+    <h2>Responsible Disclosure</h2>
     <p>
-      This engagement does not allow disclosure.
-      No third-party resources were claimed or modified during testing.
-      This report contains only non-destructive DNS and HTTP proof.
+      This is a security demonstration page for educational purposes only.
+      No actual systems were compromised in creating this demonstration.
     </p>
   </section>
 
   <footer>
-    <p>© 2025 Bhavish Choudhary (Anon-hackerxD) — Ethical Vulnerability Disclosure</p>
+    <p>© 2025 Bhavish Choudhary (AnonymoushackerxD) - Security Research Demonstration</p>
   </footer>
 </body>
 </html>
